@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Cajero Automático</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #F0F2F5;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .atm-container {
+            width: 100%;
+            max-width: 960px;
+        }
+        .atm-body {
+            background: #E0E0E0;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+        @media (min-width: 768px) {
+            .atm-body {
+                grid-template-columns: 2fr 1fr;
+            }
+        }
+        .screen {
+            background-color: #004d99;
+            color: #FFFFFF;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            height: 24rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        @media (min-width: 768px) {
+            .screen {
+                height: 31.25rem;
+            }
+        }
+        .text-center { text-align: center; }
+        .my-auto { margin-top: auto; margin-bottom: auto; }
+        .text-4xl { font-size: 2.25rem; }
+        .font-bold { font-weight: bold; }
+        .mb-2 { margin-bottom: 0.5rem; }
+        .text-lg { font-size: 1.125rem; }
+        .grid { display: grid; }
+        .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+        .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .gap-4 { gap: 1rem; }
+        .mt-8 { margin-top: 2rem; }
+        .btn-main {
+            background-color: #007bff;
+            color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-size: 1.125rem;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.2s, transform 0.2s;
+        }
+        .btn-main:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            border: none;
+            width: 100%;
+            margin-top: 1rem;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            border: none;
+            width: 100%;
+            margin-top: 1rem;
+        }
+        .keypad-btn {
+            background-color: #e9ecef;
+            color: #333;
+            border: 1px solid #ced4da;
+            padding: 1rem;
+            border-radius: 0.375rem;
+            font-size: 1.125rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.1s;
+        }
+        .keypad-btn:active {
+            background-color: #adb5bd;
+        }
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+        }
+        .slot {
+            background-color: #333;
+            border-radius: 0.375rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #aaa;
+            font-size: 0.875rem;
+            flex-grow: 1;
+        }
+        .slot-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        .slot-light {
+            width: 0.625rem;
+            height: 0.625rem;
+            border-radius: 50%;
+            background-color: #6c757d;
+            transition: background-color 0.3s;
+        }
+        .slot-light.active {
+            background-color: #28a745;
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            50% { opacity: 0.5; }
+        }
+        .senior-mode .screen {
+            font-size: 1.25rem;
+        }
+        .senior-mode .btn-main, .senior-mode .btn-secondary, .senior-mode .btn-danger {
+            font-size: 1.1rem;
+            padding: 1rem;
+        }
+        .senior-mode .keypad-btn {
+            font-size: 1.25rem;
+        }
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+        }
+        .modal-content {
+            background-color: #fff;
+            color: #333;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            max-width: 90%;
+            width: 500px;
+            text-align: center;
+        }
+        .hidden {
+            display: none;
+        }
+        .animate-dispense {
+            animation: dispense 1.5s ease-out forwards;
+        }
+        @keyframes dispense {
+            0% { transform: translateY(100%); opacity: 0; }
+            50% { transform: translateY(-20px); opacity: 1; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+        .animate-passbook {
+            animation: passbook 2s ease-in-out forwards;
+        }
+        @keyframes passbook {
+            0% { transform: translateX(-100%); opacity: 0; }
+            30% { transform: translateX(0); opacity: 1; }
+            70% { transform: translateX(0); opacity: 1; }
+            100% { transform: translateX(100%); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="atm-container" class="atm-container">
+        <div class="atm-body">
+            <div class="md-col-span-2">
+                <div id="screen" class="screen">
+                    <!-- Screen content will be rendered here by JavaScript -->
+                </div>
+            </div>
+
+            <div class="flex-col-between">
+                <div class="keypad">
+                    <button class="keypad-btn" onclick="atm.keypadInput('1')">1</button>
+                    <button class="keypad-btn" onclick="atm.keypadInput('2')">2</button>
+                    <button class="keypad-btn" onclick="atm.keypadInput('3')">3</button>
+                    <button class="keypad-btn" onclick="atm.keypadInput('4')">4</button>
+                    <button class="keypad-btn" onclick="atm.keypadInput('5')">5</button>
+                    <button class="keypad-btn" onclick="atm.keypadInput('6')">6</button>
+                    <button class="keypad-btn" onclick="atm.keypadInput('7')">7</button>
+                    <button class="keypad-btn" onclick="atm.keypadInput('8')">8</button>
+                    <button class="keypad-btn" onclick="atm.keypadInput('9')">9</button>
+                    <button class="keypad-btn" style="background-color: #ffc107;" onclick="atm.keypadInput('clear')">Borrar</button>
+                    <button class="keypad-btn" onclick="atm.keypadInput('0')">0</button>
+                    <button class="keypad-btn" style="background-color: #28a745; color: white;" onclick="atm.keypadInput('enter')">Enter</button>
+                </div>
+                
+                <div style="margin-top: 1rem; margin-bottom: 1rem;">
+                    <div class="slot-group">
+                        <div id="card-slot-light" class="slot-light"></div>
+                        <div class="slot">
+                            <span>Tarjeta / NFC</span>
+                        </div>
+                    </div>
+                     <div class="slot-group">
+                        <div id="cash-slot-light" class="slot-light"></div>
+                        <div class="slot">
+                            <span>Efectivo / Recibos</span>
+                        </div>
+                    </div>
+                     <div class="slot-group">
+                        <div id="passbook-slot-light" class="slot-light"></div>
+                        <div class="slot">
+                            <span>Libreta / Cheques</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 1rem;">
+             <label for="senior-mode-toggle" style="display: flex; align-items: center; justify-content: center; cursor: pointer;">
+                <div style="position: relative;">
+                    <input type="checkbox" id="senior-mode-toggle" style="position: absolute; opacity: 0; width: 0; height: 0;" onchange="atm.toggleSeniorMode()">
+                    <div style="display: block; background-color: #6c757d; width: 3.5rem; height: 2rem; border-radius: 9999px;"></div>
+                    <div class="dot" style="position: absolute; left: 0.25rem; top: 0.25rem; background-color: white; width: 1.5rem; height: 1.5rem; border-radius: 9999px; transition: transform 0.3s;"></div>
+                </div>
+                <div style="margin-left: 0.75rem; color: #4a5568;">
+                    Activar Vista Simplificada
+                </div>
+            </label>
+        </div>
+    </div>
+
+    <div id="modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h3 id="modal-title" style="font-size: 1.5rem; font-weight: bold; margin-bottom: 1rem;"></h3>
+            <p id="modal-message" style="margin-bottom: 1.5rem;"></p>
+            <button id="modal-button" class="btn-main" style="padding: 0.5rem 1.5rem; border-radius: 0.5rem;" onclick="atm.closeModal()">Aceptar</button>
+        </div>
+    </div>
+
+<script>
+    const ATM = function() {
+        let currentState = 'welcome';
+        let pinInput = '';
+        let amountInput = '';
+        let transferAccountInput = '';
+        let billRefInput = '';
+        let cardlessPhoneInput = '';
+        let cardlessCodeInput = '';
+        let cardInserted = false;
+        let seniorMode = false;
+
+        const account = {
+            balance: 5420.75,
+            pin: "1234",
+            transactions: [
+                { date: "25/08/2025", desc: "Pago recibo - Electricidad", amount: -75.50 },
+                { date: "24/08/2025", desc: "Ingreso en efectivo", amount: 200.00 },
+                { date: "22/08/2025", desc: "Retirada de efectivo", amount: -60.00 },
+                { date: "20/08/2025", desc: "Transferencia a Carlos", amount: -150.00 },
+                { date: "18/08/2025", desc: "Compra en supermercado", amount: -112.30 },
+            ],
+            dailyWithdrawalTotal: 60,
+            dailyWithdrawalLimit: 600,
+        };
+
+        const screen = document.getElementById('screen');
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSound(type) {
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.3, audioContext.currentTime + 0.01);
+
+            if (type === 'keypress') {
+                oscillator.frequency.setValueAtTime(440, audioContext.currentTime);
+            } else if (type === 'success') {
+                oscillator.frequency.setValueAtTime(880, audioContext.currentTime);
+            } else if (type === 'error') {
+                oscillator.frequency.setValueAtTime(220, audioContext.currentTime);
+            } else if (type === 'cash') {
+                oscillator.type = 'sawtooth';
+                oscillator.frequency.setValueAtTime(100, audioContext.currentTime);
+                gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.5);
+            }
+
+            oscillator.start();
+            oscillator.stop(audioContext.currentTime + 0.1);
+        }
+
+        function updateScreen() {
+            let html = '';
+            switch (currentState) {
+                case 'welcome':
+                    html = `
+                        <div class="text-center" style="margin: auto;">
+                            <h1 style="font-size: 2.25rem; font-weight: bold; margin-bottom: 0.5rem;">Bienvenido</h1>
+                            <p style="font-size: 1.125rem;">Por favor, elija una opción para comenzar.</p>
+                        </div>
+                        <div class="grid-cols-2" style="display: grid; gap: 1rem; margin-top: 2rem;">
+                            <button class="btn-main" onclick="atm.selectOperation('insertCard')">Insertar Tarjeta</button>
+                            <button class="btn-main" onclick="atm.selectOperation('cardless')">Operar sin Tarjeta</button>
+                        </div>
+                    `;
+                    break;
+                case 'pin':
+                    html = `
+                        <div class="text-center" style="margin: auto;">
+                            <h2 style="font-size: 1.875rem; font-weight: bold; margin-bottom: 1rem;">Introduzca su PIN</h2>
+                            <div style="background-color: white; color: black; font-size: 2.25rem; letter-spacing: 0.25em; border-radius: 0.5rem; padding: 1rem; width: 12rem; margin: auto; height: 5rem; display: flex; align-items: center; justify-content: center;">
+                                ${'*'.repeat(pinInput.length)}
+                            </div>
+                            <p style="margin-top: 1rem; font-size: 0.875rem;">Pulse 'Enter' para continuar.</p>
+                        </div>
+                    `;
+                    break;
+                case 'cardless':
+                     html = `
+                        <div class="text-center" style="margin: auto;">
+                            <h2 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 0.5rem;">Retiro sin Tarjeta</h2>
+                            <label style="display: block; margin-bottom: 0.25rem;">Nº de teléfono:</label>
+                            <div style="background-color: white; color: black; font-size: 1.5rem; border-radius: 0.5rem; padding: 0.5rem; width: 100%; margin: auto; height: 3rem; display: flex; align-items: center; justify-content: center; margin-bottom: 0.5rem;">
+                                ${cardlessPhoneInput}
+                            </div>
+                            <label style="display: block; margin-bottom: 0.25rem;">Clave de 6 dígitos:</label>
+                            <div style="background-color: white; color: black; font-size: 1.5rem; border-radius: 0.5rem; padding: 0.5rem; width: 12rem; margin: auto; height: 3rem; display: flex; align-items: center; justify-content: center;">
+                                ${'*'.repeat(cardlessCodeInput.length)}
+                            </div>
+                            <p style="margin-top: 0.5rem; font-size: 0.875rem;">Rellene los campos y pulse 'Enter'.</p>
+                        </div>
+                        <button class="btn-secondary" onclick="atm.selectOperation('backToWelcome')">Volver</button>
+                    `;
+                    break;
+                case 'menu':
+                    html = `
+                        <h2 style="font-size: 1.5rem; font-weight: bold; text-align: center; margin-bottom: 1rem;">Menú Principal</h2>
+                        <div class="grid-cols-2" style="display: grid; gap: 0.75rem;">
+                            <button class="btn-main" style="padding: 0.75rem;" onclick="atm.selectOperation('withdraw')">Retirar Efectivo</button>
+                            <button class="btn-main" style="padding: 0.75rem;" onclick="atm.selectOperation('deposit')">Ingresar Efectivo</button>
+                            <button class="btn-main" style="padding: 0.75rem;" onclick="atm.selectOperation('balance')">Saldo y Movimientos</button>
+                            <button class="btn-main" style="padding: 0.75rem;" onclick="atm.selectOperation('transfer')">Transferencias</button>
+                            <button class="btn-main" style="padding: 0.75rem;" onclick="atm.selectOperation('billPay')">Pago de Recibos</button>
+                            <button class="btn-main" style="padding: 0.75rem;" onclick="atm.selectOperation('passbook')">Actualizar Libreta</button>
+                        </div>
+                        <button class="btn-danger" onclick="atm.selectOperation('exit')">Finalizar y Salir</button>
+                    `;
+                    break;
+                case 'withdraw':
+                     html = `
+                        <h2 style="font-size: 1.5rem; font-weight: bold; text-align: center; margin-bottom: 1rem;">Retirar Efectivo</h2>
+                        <p style="text-align: center; margin-bottom: 1rem;">Seleccione una cantidad o ingrese otra.</p>
+                        <div class="grid-cols-2" style="display: grid; gap: 0.75rem;">
+                            <button class="btn-main" style="padding: 0.75rem;" onclick="atm.processWithdrawal(20)">20 €</button>
+                            <button class="btn-main" style="padding: 0.75rem;" onclick="atm.processWithdrawal(50)">50 €</button>
+                            <button class="btn-main" style="padding: 0.75rem;" onclick="atm.processWithdrawal(100)">100 €</button>
+                            <button class="btn-main" style="padding: 0.75rem;" onclick="atm.processWithdrawal(200)">200 €</button>
+                        </div>
+                        <button class="btn-secondary" onclick="atm.selectOperation('withdraw_other')">Otra Cantidad</button>
+                        <button class="btn-secondary" onclick="atm.selectOperation('backToMenu')">Volver al Menú</button>
+                    `;
+                    break;
+                case 'withdraw_other':
+                    html = `
+                        <div class="text-center" style="margin: auto;">
+                            <h2 style="font-size: 1.875rem; font-weight: bold; margin-bottom: 1rem;">Introduzca la Cantidad</h2>
+                            <div style="background-color: white; color: black; font-size: 2.25rem; border-radius: 0.5rem; padding: 1rem; width: 16rem; margin: auto; height: 5rem; display: flex; align-items: center; justify-content: center;">
+                                ${amountInput || '0'} €
+                            </div>
+                            <p style="margin-top: 1rem; font-size: 0.875rem;">Pulse 'Enter' para confirmar.</p>
+                        </div>
+                        <button class="btn-secondary" onclick="atm.selectOperation('backToMenu')">Volver al Menú</button>
+                    `;
+                    break;
+                case 'deposit':
+                    html = `
+                        <div class="text-center" style="margin: auto;">
+                            <h2 style="font-size: 1.875rem; font-weight: bold; margin-bottom: 1rem;">Ingresar Efectivo</h2>
+                            <p style="margin-bottom: 1rem;">Introduzca los billetes en la ranura. La máquina los contará automáticamente.</p>
+                            <div style="background-color: white; color: black; font-size: 2.25rem; border-radius: 0.5rem; padding: 1rem; width: 16rem; margin: auto; height: 5rem; display: flex; align-items: center; justify-content: center;">
+                                ${amountInput || '0'} €
+                            </div>
+                            <p style="margin-top: 1rem; font-size: 0.875rem;">Pulse 'Enter' para confirmar el ingreso.</p>
+                        </div>
+                        <button class="btn-secondary" onclick="atm.selectOperation('backToMenu')">Volver al Menú</button>
+                    `;
+                    break;
+                case 'balance':
+                    html = `
+                        <h2 style="font-size: 1.5rem; font-weight: bold; text-align: center; margin-bottom: 0.5rem;">Saldo y Movimientos</h2>
+                        <div style="background-color: rgba(255, 255, 255, 0.1); padding: 0.75rem; border-radius: 0.5rem; text-align: center; margin-bottom: 0.75rem;">
+                            <p style="font-size: 1.125rem;">Saldo Actual:</p>
+                            <p style="font-size: 1.875rem; font-weight: bold;">${account.balance.toFixed(2).replace('.',',')} €</p>
+                        </div>
+                        <h3 style="font-weight: bold; margin-bottom: 0.25rem; text-align: center;">Últimos Movimientos</h3>
+                        <div style="background-color: rgba(255, 255, 255, 0.1); font-size: 0.875rem; padding: 0.5rem; border-radius: 0.5rem; height: 12rem; overflow-y: auto;">
+                            ${account.transactions.map(t => `
+                                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255, 255, 255, 0.2); padding-top: 0.25rem; padding-bottom: 0.25rem;">
+                                    <span>${t.date} - ${t.desc}</span>
+                                    <span style="color: ${t.amount > 0 ? '#4CAF50' : '#F44336'};">${t.amount.toFixed(2).replace('.',',')} €</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <button class="btn-secondary" style="margin-top: 0.75rem;" onclick="atm.selectOperation('backToMenu')">Volver al Menú</button>
+                    `;
+                    break;
+                case 'transfer':
+                    html = `
+                         <div class="text-center" style="margin: auto;">
+                            <h2 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 0.5rem;">Transferencia</h2>
+                            <label for="account-number" style="display: block; margin-bottom: 0.25rem;">Nº de cuenta de destino:</label>
+                            <div style="background-color: white; color: black; font-size: 1.5rem; border-radius: 0.5rem; padding: 0.5rem; width: 100%; margin: auto; height: 3rem; display: flex; align-items: center; justify-content: center; margin-bottom: 0.5rem;">
+                                ${transferAccountInput}
+                            </div>
+                            <label for="amount" style="display: block; margin-bottom: 0.25rem;">Cantidad:</label>
+                            <div style="background-color: white; color: black; font-size: 1.5rem; border-radius: 0.5rem; padding: 0.5rem; width: 12rem; margin: auto; height: 3rem; display: flex; align-items: center; justify-content: center;">
+                                ${amountInput || '0'} €
+                            </div>
+                            <p style="margin-top: 0.5rem; font-size: 0.875rem;">Rellene los campos y pulse 'Enter'.</p>
+                        </div>
+                        <button class="btn-secondary" onclick="atm.selectOperation('backToMenu')">Volver al Menú</button>
+                    `;
+                    break;
+                 case 'billPay':
+                    html = `
+                        <div class="text-center" style="margin: auto;">
+                            <h2 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 0.5rem;">Pago de Recibos</h2>
+                            <label style="display: block; margin-bottom: 0.25rem;">Referencia del recibo:</label>
+                            <div style="background-color: white; color: black; font-size: 1.5rem; border-radius: 0.5rem; padding: 0.5rem; width: 100%; margin: auto; height: 3rem; display: flex; align-items: center; justify-content: center; margin-bottom: 0.5rem;">
+                                ${billRefInput}
+                            </div>
+                            <label style="display: block; margin-bottom: 0.25rem;">Cantidad a pagar:</label>
+                            <div style="background-color: white; color: black; font-size: 1.5rem; border-radius: 0.5rem; padding: 0.5rem; width: 12rem; margin: auto; height: 3rem; display: flex; align-items: center; justify-content: center;">
+                                ${amountInput || '0'} €
+                            </div>
+                            <p style="margin-top: 0.5rem; font-size: 0.875rem;">Rellene los campos y pulse 'Enter'.</p>
+                        </div>
+                        <button class="btn-secondary" onclick="atm.selectOperation('backToMenu')">Volver al Menú</button>
+                    `;
+                    break;
+                case 'passbook':
+                    html = `
+                        <div class="text-center" style="margin: auto;">
+                            <h2 style="font-size: 1.875rem; font-weight: bold; margin-bottom: 1rem;">Actualizar Libreta</h2>
+                            <p>Por favor, inserte su libreta en la ranura correspondiente para actualizarla.</p>
+                            <div id="passbook-animation-container" style="position: relative; height: 5rem; margin-top: 1rem; overflow: hidden;"></div>
+                        </div>
+                        <button class="btn-secondary" onclick="atm.selectOperation('backToMenu')">Volver</button>
+                    `;
+                    setTimeout(() => {
+                        document.getElementById('passbook-slot-light').classList.add('active');
+                        const container = document.getElementById('passbook-animation-container');
+                        if (container) {
+                            container.innerHTML = `<div style="position: absolute; width: 100%; height: 100%; background-color: #d1d5db; color: black; padding: 0.5rem; border-radius: 0.5rem; animation: passbook 2s ease-in-out forwards;">Imprimiendo movimientos...</div>`;
+                            setTimeout(() => {
+                                document.getElementById('passbook-slot-light').classList.remove('active');
+                                this.showModal('Libreta Actualizada', 'Su libreta ha sido actualizada correctamente. Por favor, retírela.', () => { this.selectOperation('menu'); });
+                            }, 2000);
+                        }
+                    }, 500);
+                    break;
+                 case 'processing':
+                    html = `
+                        <div class="text-center" style="margin: auto;">
+                            <h2 style="font-size: 2.25rem; font-weight: bold; animation: pulse 1s infinite;">Procesando...</h2>
+                            <p style="margin-top: 1rem;">Por favor, espere un momento.</p>
+                        </div>
+                    `;
+                    break;
+                case 'goodbye':
+                     html = `
+                        <div class="text-center" style="margin: auto;">
+                            <h1 style="font-size: 2.25rem; font-weight: bold; margin-bottom: 0.5rem;">Gracias por su visita</h1>
+                            <p style="font-size: 1.125rem;">No olvide retirar su tarjeta y su recibo.</p>
+                        </div>
+                    `;
+                    break;
+                default:
+                     html = `
+                        <div class="text-center" style="margin: auto;">
+                            <h1 style="font-size: 1.875rem; font-weight: bold; margin-bottom: 0.5rem;">Error del Sistema</h1>
+                            <p style="font-size: 1.125rem;">Se ha producido un error inesperado. Por favor, reinicie la sesión.</p>
+                            <button class="btn-danger" onclick="atm.selectOperation('exit')">Salir</button>
+                        </div>
+                     `;
+            }
+            screen.innerHTML = html;
+        }
+        
+        this.showModal = (title, message, callback) => {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-message').innerText = message;
+            const modalButton = document.getElementById('modal-button');
+            modalButton.onclick = () => {
+                this.closeModal();
+                if (callback) callback();
+                else this.selectOperation('menu');
+            };
+            document.getElementById('modal').classList.remove('hidden');
+            playSound('success');
+        };
+
+        this.closeModal = () => {
+            document.getElementById('modal').classList.add('hidden');
+        };
+
+        this.keypadInput = (key) => {
+            playSound('keypress');
+            if (currentState === 'pin') {
+                if (key === 'clear') pinInput = '';
+                else if (key === 'enter') this.processPin();
+                else if (pinInput.length < 4) pinInput += key;
+            } else if (currentState === 'cardless') {
+                if (key === 'clear') {
+                    cardlessPhoneInput = '';
+                    cardlessCodeInput = '';
+                } else if (key === 'enter') {
+                    this.processCardlessWithdrawal();
+                } else {
+                    if (cardlessPhoneInput.length < 9) {
+                        cardlessPhoneInput += key;
+                    } else if (cardlessCodeInput.length < 6) {
+                        cardlessCodeInput += key;
+                    }
+                }
+            } else if (currentState === 'withdraw_other' || currentState === 'deposit') {
+                if (key === 'clear') amountInput = '';
+                else if (key === 'enter') {
+                    if (currentState === 'withdraw_other') this.processWithdrawal(parseFloat(amountInput));
+                    if (currentState === 'deposit') this.processDeposit(parseFloat(amountInput));
+                }
+                else amountInput += key;
+            } else if (currentState === 'transfer') {
+                if (key === 'clear') {
+                    amountInput = '';
+                    transferAccountInput = '';
+                } else if (key === 'enter') {
+                    this.processTransfer(transferAccountInput, parseFloat(amountInput));
+                } else {
+                    if (transferAccountInput.length < 24) {
+                        transferAccountInput += key;
+                    } else {
+                        amountInput += key;
+                    }
+                }
+            } else if (currentState === 'billPay') {
+                 if (key === 'clear') {
+                    amountInput = '';
+                    billRefInput = '';
+                } else if (key === 'enter') {
+                    this.processBillPay(billRefInput, parseFloat(amountInput));
+                } else {
+                    if (billRefInput.length < 10 && amountInput === '') {
+                         billRefInput += key;
+                    } else if (billRefInput.length >= 10) {
+                        amountInput += key;
+                    } else {
+                        amountInput += key;
+                    }
+                }
+            }
+            updateScreen();
+        };
+
+        this.processPin = () => {
+            if (pinInput === account.pin) {
+                currentState = 'menu';
+                pinInput = '';
+            } else {
+                playSound('error');
+                this.showModal('PIN Incorrecto', 'El PIN introducido no es válido. Por favor, inténtelo de nuevo.', () => {
+                     pinInput = '';
+                     updateScreen();
+                });
+            }
+            updateScreen();
+        };
+
+        this.processCardlessWithdrawal = () => {
+            if (cardlessPhoneInput.length !== 9 || cardlessCodeInput.length !== 6) {
+                playSound('error');
+                this.showModal('Datos Inválidos', 'Por favor, verifique el número de teléfono (9 dígitos) y la clave (6 dígitos).', () => {
+                    cardlessPhoneInput = '';
+                    cardlessCodeInput = '';
+                    updateScreen();
+                });
+                return;
+            }
+            const mockAmount = 50;
+            if (mockAmount > account.balance) {
+                playSound('error');
+                this.showModal('Saldo Insuficiente', 'No dispone de saldo suficiente para realizar esta operación.', () => { this.selectOperation('welcome'); });
+                return;
+            }
+            
+            currentState = 'processing';
+            updateScreen();
+            
+            setTimeout(() => {
+                account.balance -= mockAmount;
+                account.transactions.unshift({ date: "26/08/2025", desc: "Retiro sin tarjeta", amount: -mockAmount });
+                document.getElementById('cash-slot-light').classList.add('active');
+                playSound('cash');
+                screen.innerHTML = `
+                    <div class="text-center" style="margin: auto;">
+                        <h2 style="font-size: 1.875rem; font-weight: bold; margin-bottom: 1rem;">Retire su dinero</h2>
+                        <p>Por favor, recoja su efectivo de la ranura.</p>
+                        <div style="margin-top: 2rem; font-size: 3rem; animation: dispense 1.5s ease-out forwards;">💶</div>
+                    </div>
+                    <button class="btn-secondary" onclick="atm.selectOperation('exit')">Finalizar</button>
+                `;
+                 cardlessPhoneInput = '';
+                 cardlessCodeInput = '';
+            }, 2000);
+        };
+        
+        this.processWithdrawal = (amount) => {
+            if (isNaN(amount) || amount <= 0) {
+                playSound('error');
+                this.showModal('Cantidad Inválida', 'Por favor, introduzca una cantidad válida.', () => { this.selectOperation('menu'); });
+                amountInput = '';
+                return;
+            }
+            if (amount > account.balance) {
+                playSound('error');
+                this.showModal('Saldo Insuficiente', 'No dispone de saldo suficiente para realizar esta operación.', () => { this.selectOperation('menu'); });
+                amountInput = '';
+                return;
+            }
+            if ((account.dailyWithdrawalTotal + amount) > account.dailyWithdrawalLimit) {
+                playSound('error');
+                this.showModal('Límite Diario Superado', `Ha superado su límite de retirada diario de ${account.dailyWithdrawalLimit} €. Ya ha retirado ${account.dailyWithdrawalTotal} € hoy.`, () => { this.selectOperation('menu'); });
+                amountInput = '';
+                return;
+            }
+            if (amount > 3000) {
+                this.showModal('Aviso Regulatorio', 'Esta operación por valor superior a 3.000 € será comunicada a Hacienda según la normativa vigente de prevención de blanqueo de capitales.');
+            }
+
+            currentState = 'processing';
+            updateScreen();
+            
+            setTimeout(() => {
+                account.balance -= amount;
+                account.dailyWithdrawalTotal += amount;
+                account.transactions.unshift({ date: "26/08/2025", desc: "Retirada de efectivo", amount: -amount });
+                
+                document.getElementById('cash-slot-light').classList.add('active');
+                playSound('cash');
+                
+                screen.innerHTML = `
+                    <div class="text-center" style="margin: auto;">
+                        <h2 style="font-size: 1.875rem; font-weight: bold; margin-bottom: 1rem;">Retire su dinero</h2>
+                        <p>Por favor, recoja su efectivo de la ranura.</p>
+                        <div style="margin-top: 2rem; font-size: 3rem; animation: dispense 1.5s ease-out forwards;">💶</div>
+                    </div>
+                    <button class="btn-secondary" onclick="atm.selectOperation('exit')">Finalizar</button>
+                `;
+                amountInput = '';
+            }, 2000);
+        };
+        
+        this.processDeposit = (amount) => {
+            if (isNaN(amount) || amount <= 0) {
+                playSound('error');
+                this.showModal('Cantidad Inválida', 'Por favor, introduzca una cantidad válida.', () => { this.selectOperation('menu'); });
+                amountInput = '';
+                return;
+            }
+             if (amount > 3000) {
+                this.showModal('Aviso Regulatorio', 'Esta operación por valor superior a 3.000 € será comunicada a Hacienda según la normativa vigente de prevención de blanqueo de capitales.');
+            }
+            currentState = 'processing';
+            updateScreen();
+            
+            setTimeout(() => {
+                account.balance += amount;
+                account.transactions.unshift({ date: "26/08/2025", desc: "Ingreso en efectivo", amount: amount });
+                this.showModal('Ingreso Correcto', `Se han ingresado ${amount.toFixed(2).replace('.',',')} € en su cuenta. Su nuevo saldo es ${account.balance.toFixed(2).replace('.',',')} €.`);
+                currentState = 'menu';
+                amountInput = '';
+                updateScreen();
+            }, 2000);
+        };
+
+        this.processTransfer = (destAccount, amount) => {
+             if (destAccount.length !== 24 || isNaN(amount) || amount <= 0) {
+                playSound('error');
+                this.showModal('Datos Inválidos', 'Por favor, verifique el número de cuenta (debe tener 24 dígitos) y la cantidad.', () => { this.selectOperation('menu'); });
+                return;
+            }
+             if (amount > account.balance) {
+                playSound('error');
+                this.showModal('Saldo Insuficiente', 'No dispone de saldo suficiente para realizar esta operación.', () => { this.selectOperation('menu'); });
+                return;
+            }
+             if (amount > 6000) {
+                playSound('error');
+                this.showModal('Límite de Transferencia Superado', 'El límite por operación es de 6.000 €. Para cantidades mayores, utilice la banca online.', () => { this.selectOperation('menu'); });
+                return;
+            }
+             if (amount > 10000) {
+                this.showModal('Aviso Regulatorio', 'Esta transferencia por valor superior a 10.000 € será comunicada a Hacienda según la normativa vigente.');
+            }
+            currentState = 'processing';
+            updateScreen();
+            setTimeout(() => {
+                account.balance -= amount;
+                account.transactions.unshift({ date: "26/08/2025", desc: `Transferencia a ${destAccount.slice(0,4)}...${destAccount.slice(-4)}`, amount: -amount });
+                this.showModal('Transferencia Realizada', `Se han transferido ${amount.toFixed(2).replace('.',',')} € correctamente.`, () => { this.selectOperation('menu'); });
+                amountInput = '';
+                transferAccountInput = '';
+                updateScreen();
+            }, 2000);
+        };
+
+         this.processBillPay = (ref, amount) => {
+             if (ref.length < 10 || isNaN(amount) || amount <= 0) {
+                playSound('error');
+                this.showModal('Datos Inválidos', 'Por favor, verifique la referencia y la cantidad.', () => { this.selectOperation('menu'); });
+                return;
+            }
+             if (amount > account.balance) {
+                playSound('error');
+                this.showModal('Saldo Insuficiente', 'No dispone de saldo suficiente para realizar el pago del recibo.', () => { this.selectOperation('menu'); });
+                return;
+            }
+            currentState = 'processing';
+            updateScreen();
+            setTimeout(() => {
+                account.balance -= amount;
+                account.transactions.unshift({ date: "26/08/2025", desc: `Pago recibo ref: ${ref}`, amount: -amount });
+                this.showModal('Pago Realizado', `El pago por ${amount.toFixed(2).replace('.',',')} € del recibo con referencia ${ref} se ha realizado con éxito.`, () => { this.selectOperation('menu'); });
+                amountInput = '';
+                billRefInput = '';
+                updateScreen();
+            }, 2000);
+        };
+
+        this.selectOperation = (op) => {
+            switch (op) {
+                case 'insertCard':
+                    playSound('success');
+                    document.getElementById('card-slot-light').classList.add('active');
+                    cardInserted = true;
+                    currentState = 'pin';
+                    break;
+                case 'exit':
+                    currentState = 'goodbye';
+                    if (cardInserted) {
+                        document.getElementById('card-slot-light').classList.remove('active');
+                        cardInserted = false;
+                    }
+                    document.getElementById('cash-slot-light').classList.remove('active');
+                    setTimeout(() => {
+                        currentState = 'welcome';
+                        updateScreen();
+                    }, 4000);
+                    break;
+                case 'backToMenu':
+                    currentState = 'menu';
+                    amountInput = '';
+                    transferAccountInput = '';
+                    billRefInput = '';
+                    break;
+                case 'backToWelcome':
+                    currentState = 'welcome';
+                    cardlessPhoneInput = '';
+                    cardlessCodeInput = '';
+                    break;
+                default:
+                    currentState = op;
+            }
+            updateScreen();
+        };
+        
+        this.toggleSeniorMode = () => {
+            seniorMode = !seniorMode;
+            document.getElementById('atm-container').classList.toggle('senior-mode');
+            const dot = document.querySelector('.dot');
+            dot.style.transform = seniorMode ? 'translateX(24px)' : 'translateX(0)';
+        };
+
+        this.init = () => {
+            updateScreen();
+        };
+    };
+
+    const atm = new ATM();
+    window.onload = atm.init;
+</script>
+</body>
+</html>
