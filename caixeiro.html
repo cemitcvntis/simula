@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulador de Cajero Automático</title>
+    <title>Simulador de Caixeiro Automático</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -227,19 +227,19 @@
                     <div class="slot-group">
                         <div id="card-slot-light" class="slot-light"></div>
                         <div class="slot">
-                            <span>Tarjeta / NFC</span>
+                            <span>Tarxeta / NFC BanCuntis</span>
                         </div>
                     </div>
                      <div class="slot-group">
                         <div id="cash-slot-light" class="slot-light"></div>
                         <div class="slot">
-                            <span>Efectivo / Recibos</span>
+                            <span>Efectivo / Recibos BanCuntis</span>
                         </div>
                     </div>
                      <div class="slot-group">
                         <div id="passbook-slot-light" class="slot-light"></div>
                         <div class="slot">
-                            <span>Libreta / Cheques</span>
+                            <span>Libreta / Cheques BanCuntis</span>
                         </div>
                     </div>
                 </div>
@@ -283,11 +283,11 @@
             balance: 5420.75,
             pin: "1234",
             transactions: [
-                { date: "25/08/2025", desc: "Pago recibo - Electricidad", amount: -75.50 },
-                { date: "24/08/2025", desc: "Ingreso en efectivo", amount: 200.00 },
-                { date: "22/08/2025", desc: "Retirada de efectivo", amount: -60.00 },
-                { date: "20/08/2025", desc: "Transferencia a Carlos", amount: -150.00 },
-                { date: "18/08/2025", desc: "Compra en supermercado", amount: -112.30 },
+                { date: "25/08/2025", desc: "Pago recibo - ElectraCuntiense", amount: -75.50 },
+                { date: "24/08/2025", desc: "Ingreso cartiños en efectivo", amount: 200.00 },
+                { date: "22/08/2025", desc: "Retirada de cartiños efectivo", amount: -60.00 },
+                { date: "20/08/2025", desc: "Transferencia a Furancho Das Pejas", amount: -150.00 },
+                { date: "18/08/2025", desc: "Compra en supermercado Pernas", amount: -112.30 },
             ],
             dailyWithdrawalTotal: 60,
             dailyWithdrawalLimit: 600,
@@ -327,19 +327,19 @@
                 case 'welcome':
                     html = `
                         <div class="text-center" style="margin: auto;">
-                            <h1 style="font-size: 2.25rem; font-weight: bold; margin-bottom: 0.5rem;">Bienvenido</h1>
-                            <p style="font-size: 1.125rem;">Por favor, elija una opción para comenzar.</p>
+                            <h1 style="font-size: 2.25rem; font-weight: bold; margin-bottom: 0.5rem;">Dámoslle a Benvenida a BanCuntis</h1>
+                            <p style="font-size: 1.125rem;">Por favor, elixa unha opción para comezar.</p>
                         </div>
                         <div class="grid-cols-2" style="display: grid; gap: 1rem; margin-top: 2rem;">
-                            <button class="btn-main" onclick="atm.selectOperation('insertCard')">Insertar Tarjeta</button>
-                            <button class="btn-main" onclick="atm.selectOperation('cardless')">Operar sin Tarjeta</button>
+                            <button class="btn-main" onclick="atm.selectOperation('insertCard')">Insertar Tarxeta</button>
+                            <button class="btn-main" onclick="atm.selectOperation('cardless')">Operar sen Tarxeta</button>
                         </div>
                     `;
                     break;
                 case 'pin':
                     html = `
                         <div class="text-center" style="margin: auto;">
-                            <h2 style="font-size: 1.875rem; font-weight: bold; margin-bottom: 1rem;">Introduzca su PIN</h2>
+                            <h2 style="font-size: 1.875rem; font-weight: bold; margin-bottom: 1rem;">Introduza o seu PIN</h2>
                             <div style="background-color: white; color: black; font-size: 2.25rem; letter-spacing: 0.25em; border-radius: 0.5rem; padding: 1rem; width: 12rem; margin: auto; height: 5rem; display: flex; align-items: center; justify-content: center;">
                                 ${'*'.repeat(pinInput.length)}
                             </div>
@@ -350,18 +350,18 @@
                 case 'cardless':
                      html = `
                         <div class="text-center" style="margin: auto;">
-                            <h2 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 0.5rem;">Retiro sin Tarjeta</h2>
+                            <h2 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 0.5rem;">Retiro sen Tarxeta</h2>
                             <label style="display: block; margin-bottom: 0.25rem;">Nº de teléfono:</label>
                             <div style="background-color: white; color: black; font-size: 1.5rem; border-radius: 0.5rem; padding: 0.5rem; width: 100%; margin: auto; height: 3rem; display: flex; align-items: center; justify-content: center; margin-bottom: 0.5rem;">
                                 ${cardlessPhoneInput}
                             </div>
-                            <label style="display: block; margin-bottom: 0.25rem;">Clave de 6 dígitos:</label>
+                            <label style="display: block; margin-bottom: 0.25rem;">Clave de 6 díxitos:</label>
                             <div style="background-color: white; color: black; font-size: 1.5rem; border-radius: 0.5rem; padding: 0.5rem; width: 12rem; margin: auto; height: 3rem; display: flex; align-items: center; justify-content: center;">
                                 ${'*'.repeat(cardlessCodeInput.length)}
                             </div>
-                            <p style="margin-top: 0.5rem; font-size: 0.875rem;">Rellene los campos y pulse 'Enter'.</p>
+                            <p style="margin-top: 0.5rem; font-size: 0.875rem;">Enche os campos e pulsa 'Enter'.</p>
                         </div>
-                        <button class="btn-secondary" onclick="atm.selectOperation('backToWelcome')">Volver</button>
+                        <button class="btn-secondary" onclick="atm.selectOperation('backToWelcome')">Voltar</button>
                     `;
                     break;
                 case 'menu':
@@ -370,61 +370,61 @@
                         <div class="grid-cols-2" style="display: grid; gap: 0.75rem;">
                             <button class="btn-main" style="padding: 0.75rem;" onclick="atm.selectOperation('withdraw')">Retirar Efectivo</button>
                             <button class="btn-main" style="padding: 0.75rem;" onclick="atm.selectOperation('deposit')">Ingresar Efectivo</button>
-                            <button class="btn-main" style="padding: 0.75rem;" onclick="atm.selectOperation('balance')">Saldo y Movimientos</button>
+                            <button class="btn-main" style="padding: 0.75rem;" onclick="atm.selectOperation('balance')">Saldo e Movementos</button>
                             <button class="btn-main" style="padding: 0.75rem;" onclick="atm.selectOperation('transfer')">Transferencias</button>
                             <button class="btn-main" style="padding: 0.75rem;" onclick="atm.selectOperation('billPay')">Pago de Recibos</button>
                             <button class="btn-main" style="padding: 0.75rem;" onclick="atm.selectOperation('passbook')">Actualizar Libreta</button>
                         </div>
-                        <button class="btn-danger" onclick="atm.selectOperation('exit')">Finalizar y Salir</button>
+                        <button class="btn-danger" onclick="atm.selectOperation('exit')">Rematar e Sair</button>
                     `;
                     break;
                 case 'withdraw':
                      html = `
                         <h2 style="font-size: 1.5rem; font-weight: bold; text-align: center; margin-bottom: 1rem;">Retirar Efectivo</h2>
-                        <p style="text-align: center; margin-bottom: 1rem;">Seleccione una cantidad o ingrese otra.</p>
+                        <p style="text-align: center; margin-bottom: 1rem;">Seleccione unha cantidade ou ingrese otra.</p>
                         <div class="grid-cols-2" style="display: grid; gap: 0.75rem;">
                             <button class="btn-main" style="padding: 0.75rem;" onclick="atm.processWithdrawal(20)">20 €</button>
                             <button class="btn-main" style="padding: 0.75rem;" onclick="atm.processWithdrawal(50)">50 €</button>
                             <button class="btn-main" style="padding: 0.75rem;" onclick="atm.processWithdrawal(100)">100 €</button>
                             <button class="btn-main" style="padding: 0.75rem;" onclick="atm.processWithdrawal(200)">200 €</button>
                         </div>
-                        <button class="btn-secondary" onclick="atm.selectOperation('withdraw_other')">Otra Cantidad</button>
-                        <button class="btn-secondary" onclick="atm.selectOperation('backToMenu')">Volver al Menú</button>
+                        <button class="btn-secondary" onclick="atm.selectOperation('withdraw_other')">Outra Cantidade</button>
+                        <button class="btn-secondary" onclick="atm.selectOperation('backToMenu')">Voltar ao Menú</button>
                     `;
                     break;
                 case 'withdraw_other':
                     html = `
                         <div class="text-center" style="margin: auto;">
-                            <h2 style="font-size: 1.875rem; font-weight: bold; margin-bottom: 1rem;">Introduzca la Cantidad</h2>
+                            <h2 style="font-size: 1.875rem; font-weight: bold; margin-bottom: 1rem;">Introduza a Cantidade</h2>
                             <div style="background-color: white; color: black; font-size: 2.25rem; border-radius: 0.5rem; padding: 1rem; width: 16rem; margin: auto; height: 5rem; display: flex; align-items: center; justify-content: center;">
                                 ${amountInput || '0'} €
                             </div>
                             <p style="margin-top: 1rem; font-size: 0.875rem;">Pulse 'Enter' para confirmar.</p>
                         </div>
-                        <button class="btn-secondary" onclick="atm.selectOperation('backToMenu')">Volver al Menú</button>
+                        <button class="btn-secondary" onclick="atm.selectOperation('backToMenu')">Voltar ao Menú</button>
                     `;
                     break;
                 case 'deposit':
                     html = `
                         <div class="text-center" style="margin: auto;">
                             <h2 style="font-size: 1.875rem; font-weight: bold; margin-bottom: 1rem;">Ingresar Efectivo</h2>
-                            <p style="margin-bottom: 1rem;">Introduzca los billetes en la ranura. La máquina los contará automáticamente.</p>
+                            <p style="margin-bottom: 1rem;">Introduza os billetes na ranura. Non intente colar billetes falsos. Serán contados pola máquina automáticamente.</p>
                             <div style="background-color: white; color: black; font-size: 2.25rem; border-radius: 0.5rem; padding: 1rem; width: 16rem; margin: auto; height: 5rem; display: flex; align-items: center; justify-content: center;">
                                 ${amountInput || '0'} €
                             </div>
-                            <p style="margin-top: 1rem; font-size: 0.875rem;">Pulse 'Enter' para confirmar el ingreso.</p>
+                            <p style="margin-top: 1rem; font-size: 0.875rem;">Pulse 'Enter' para confirmar o ingreso.</p>
                         </div>
-                        <button class="btn-secondary" onclick="atm.selectOperation('backToMenu')">Volver al Menú</button>
+                        <button class="btn-secondary" onclick="atm.selectOperation('backToMenu')">Voltar ao Menú</button>
                     `;
                     break;
                 case 'balance':
                     html = `
-                        <h2 style="font-size: 1.5rem; font-weight: bold; text-align: center; margin-bottom: 0.5rem;">Saldo y Movimientos</h2>
+                        <h2 style="font-size: 1.5rem; font-weight: bold; text-align: center; margin-bottom: 0.5rem;">Saldo e Movementos</h2>
                         <div style="background-color: rgba(255, 255, 255, 0.1); padding: 0.75rem; border-radius: 0.5rem; text-align: center; margin-bottom: 0.75rem;">
                             <p style="font-size: 1.125rem;">Saldo Actual:</p>
                             <p style="font-size: 1.875rem; font-weight: bold;">${account.balance.toFixed(2).replace('.',',')} €</p>
                         </div>
-                        <h3 style="font-weight: bold; margin-bottom: 0.25rem; text-align: center;">Últimos Movimientos</h3>
+                        <h3 style="font-weight: bold; margin-bottom: 0.25rem; text-align: center;">Últimos Movementos</h3>
                         <div style="background-color: rgba(255, 255, 255, 0.1); font-size: 0.875rem; padding: 0.5rem; border-radius: 0.5rem; height: 12rem; overflow-y: auto;">
                             ${account.transactions.map(t => `
                                 <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255, 255, 255, 0.2); padding-top: 0.25rem; padding-bottom: 0.25rem;">
@@ -433,51 +433,51 @@
                                 </div>
                             `).join('')}
                         </div>
-                        <button class="btn-secondary" style="margin-top: 0.75rem;" onclick="atm.selectOperation('backToMenu')">Volver al Menú</button>
+                        <button class="btn-secondary" style="margin-top: 0.75rem;" onclick="atm.selectOperation('backToMenu')">Voltar ao Menú</button>
                     `;
                     break;
                 case 'transfer':
                     html = `
                          <div class="text-center" style="margin: auto;">
                             <h2 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 0.5rem;">Transferencia</h2>
-                            <label for="account-number" style="display: block; margin-bottom: 0.25rem;">Nº de cuenta de destino:</label>
+                            <label for="account-number" style="display: block; margin-bottom: 0.25rem;">Nº de conta de destino:</label>
                             <div style="background-color: white; color: black; font-size: 1.5rem; border-radius: 0.5rem; padding: 0.5rem; width: 100%; margin: auto; height: 3rem; display: flex; align-items: center; justify-content: center; margin-bottom: 0.5rem;">
                                 ${transferAccountInput}
                             </div>
-                            <label for="amount" style="display: block; margin-bottom: 0.25rem;">Cantidad:</label>
+                            <label for="amount" style="display: block; margin-bottom: 0.25rem;">Cantidade:</label>
                             <div style="background-color: white; color: black; font-size: 1.5rem; border-radius: 0.5rem; padding: 0.5rem; width: 12rem; margin: auto; height: 3rem; display: flex; align-items: center; justify-content: center;">
                                 ${amountInput || '0'} €
                             </div>
-                            <p style="margin-top: 0.5rem; font-size: 0.875rem;">Rellene los campos y pulse 'Enter'.</p>
+                            <p style="margin-top: 0.5rem; font-size: 0.875rem;">Enche os campos e pulsa 'Enter'.</p>
                         </div>
-                        <button class="btn-secondary" onclick="atm.selectOperation('backToMenu')">Volver al Menú</button>
+                        <button class="btn-secondary" onclick="atm.selectOperation('backToMenu')">Voltar ao Menú</button>
                     `;
                     break;
                  case 'billPay':
                     html = `
                         <div class="text-center" style="margin: auto;">
                             <h2 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 0.5rem;">Pago de Recibos</h2>
-                            <label style="display: block; margin-bottom: 0.25rem;">Referencia del recibo:</label>
+                            <label style="display: block; margin-bottom: 0.25rem;">Referencia do recibo: (Teclee 10 díxitos)</label>
                             <div style="background-color: white; color: black; font-size: 1.5rem; border-radius: 0.5rem; padding: 0.5rem; width: 100%; margin: auto; height: 3rem; display: flex; align-items: center; justify-content: center; margin-bottom: 0.5rem;">
                                 ${billRefInput}
                             </div>
-                            <label style="display: block; margin-bottom: 0.25rem;">Cantidad a pagar:</label>
+                            <label style="display: block; margin-bottom: 0.25rem;">Cantidade a pagar:</label>
                             <div style="background-color: white; color: black; font-size: 1.5rem; border-radius: 0.5rem; padding: 0.5rem; width: 12rem; margin: auto; height: 3rem; display: flex; align-items: center; justify-content: center;">
                                 ${amountInput || '0'} €
                             </div>
-                            <p style="margin-top: 0.5rem; font-size: 0.875rem;">Rellene los campos y pulse 'Enter'.</p>
+                            <p style="margin-top: 0.5rem; font-size: 0.875rem;">Enche os campos e pulsa 'Enter'.</p>
                         </div>
-                        <button class="btn-secondary" onclick="atm.selectOperation('backToMenu')">Volver al Menú</button>
+                        <button class="btn-secondary" onclick="atm.selectOperation('backToMenu')">Voltar ao Menú</button>
                     `;
                     break;
                 case 'passbook':
                     html = `
                         <div class="text-center" style="margin: auto;">
                             <h2 style="font-size: 1.875rem; font-weight: bold; margin-bottom: 1rem;">Actualizar Libreta</h2>
-                            <p>Por favor, inserte su libreta en la ranura correspondiente para actualizarla.</p>
+                            <p>Por favor, inserte a súa libreta na ranura correspondente para actualizala.</p>
                             <div id="passbook-animation-container" style="position: relative; height: 5rem; margin-top: 1rem; overflow: hidden;"></div>
                         </div>
-                        <button class="btn-secondary" onclick="atm.selectOperation('backToMenu')">Volver</button>
+                        <button class="btn-secondary" onclick="atm.selectOperation('backToMenu')">Voltar</button>
                     `;
                     setTimeout(() => {
                         document.getElementById('passbook-slot-light').classList.add('active');
@@ -486,7 +486,7 @@
                             container.innerHTML = `<div style="position: absolute; width: 100%; height: 100%; background-color: #d1d5db; color: black; padding: 0.5rem; border-radius: 0.5rem; animation: passbook 2s ease-in-out forwards;">Imprimiendo movimientos...</div>`;
                             setTimeout(() => {
                                 document.getElementById('passbook-slot-light').classList.remove('active');
-                                this.showModal('Libreta Actualizada', 'Su libreta ha sido actualizada correctamente. Por favor, retírela.', () => { this.selectOperation('menu'); });
+                                this.showModal('Libreta Actualizada', 'A súa libreta foi actualizada correctamente. Por favor, retírea.', () => { this.selectOperation('menu'); });
                             }, 2000);
                         }
                     }, 500);
@@ -502,16 +502,16 @@
                 case 'goodbye':
                      html = `
                         <div class="text-center" style="margin: auto;">
-                            <h1 style="font-size: 2.25rem; font-weight: bold; margin-bottom: 0.5rem;">Gracias por su visita</h1>
-                            <p style="font-size: 1.125rem;">No olvide retirar su tarjeta y su recibo.</p>
+                            <h1 style="font-size: 2.25rem; font-weight: bold; margin-bottom: 0.5rem;">Grazas pola súa visita</h1>
+                            <p style="font-size: 1.125rem;">Non olvide retirar a súa tarxeta e o seu recibo antes de que cheguen os cacos.</p>
                         </div>
                     `;
                     break;
                 default:
                      html = `
                         <div class="text-center" style="margin: auto;">
-                            <h1 style="font-size: 1.875rem; font-weight: bold; margin-bottom: 0.5rem;">Error del Sistema</h1>
-                            <p style="font-size: 1.125rem;">Se ha producido un error inesperado. Por favor, reinicie la sesión.</p>
+                            <h1 style="font-size: 1.875rem; font-weight: bold; margin-bottom: 0.5rem;">Erro do Sistema</h1>
+                            <p style="font-size: 1.125rem;">Produciuse un erro inesperado. Estamos trabajando en ello. Por favor, reinicie a sesión ou tome un café no Chistoso.</p>
                             <button class="btn-danger" onclick="atm.selectOperation('exit')">Salir</button>
                         </div>
                      `;
@@ -600,7 +600,7 @@
                 pinInput = '';
             } else {
                 playSound('error');
-                this.showModal('PIN Incorrecto', 'El PIN introducido no es válido. Por favor, inténtelo de nuevo.', () => {
+                this.showModal('PIN Incorrecto', 'O PIN introducido non é válido. Por favor, inténteo de novo. Non PIN Non Cartiños ', () => {
                      pinInput = '';
                      updateScreen();
                 });
@@ -611,7 +611,7 @@
         this.processCardlessWithdrawal = () => {
             if (cardlessPhoneInput.length !== 9 || cardlessCodeInput.length !== 6) {
                 playSound('error');
-                this.showModal('Datos Inválidos', 'Por favor, verifique el número de teléfono (9 dígitos) y la clave (6 dígitos).', () => {
+                this.showModal('Datos Inválidos', 'Por favor, verifique o número de teléfono (9 díxitos) e o contrasinal (6 díxitos).', () => {
                     cardlessPhoneInput = '';
                     cardlessCodeInput = '';
                     updateScreen();
@@ -621,7 +621,7 @@
             const mockAmount = 50;
             if (mockAmount > account.balance) {
                 playSound('error');
-                this.showModal('Saldo Insuficiente', 'No dispone de saldo suficiente para realizar esta operación.', () => { this.selectOperation('welcome'); });
+                this.showModal('Saldo Insuficiente', 'Non dispón de saldo suficiente para realizar esta operación. Fan falta máis cartiños', () => { this.selectOperation('welcome'); });
                 return;
             }
             
@@ -649,24 +649,24 @@
         this.processWithdrawal = (amount) => {
             if (isNaN(amount) || amount <= 0) {
                 playSound('error');
-                this.showModal('Cantidad Inválida', 'Por favor, introduzca una cantidad válida.', () => { this.selectOperation('menu'); });
+                this.showModal('Cantidade Inválida', 'Por favor, introduza unha cantidade válida. Non somos políticos', () => { this.selectOperation('menu'); });
                 amountInput = '';
                 return;
             }
             if (amount > account.balance) {
                 playSound('error');
-                this.showModal('Saldo Insuficiente', 'No dispone de saldo suficiente para realizar esta operación.', () => { this.selectOperation('menu'); });
+                this.showModal('Saldo Insuficiente', 'Non dispón de saldo suficiente para realizar esta operación. Fan falta máis cartiños', () => { this.selectOperation('menu'); });
                 amountInput = '';
                 return;
             }
             if ((account.dailyWithdrawalTotal + amount) > account.dailyWithdrawalLimit) {
                 playSound('error');
-                this.showModal('Límite Diario Superado', `Ha superado su límite de retirada diario de ${account.dailyWithdrawalLimit} €. Ya ha retirado ${account.dailyWithdrawalTotal} € hoy.`, () => { this.selectOperation('menu'); });
+                this.showModal('Límite Diario Superado', `Non somos políticos. Superou o seu límite de retirada diario de ${account.dailyWithdrawalLimit} €. Xa leva retirado ${account.dailyWithdrawalTotal} € hoxe.`, () => { this.selectOperation('menu'); });
                 amountInput = '';
                 return;
             }
             if (amount > 3000) {
-                this.showModal('Aviso Regulatorio', 'Esta operación por valor superior a 3.000 € será comunicada a Hacienda según la normativa vigente de prevención de blanqueo de capitales.');
+                this.showModal('Aviso Regulatorio', 'Esta operación por valor superior a 3.000 € será comunicada a Facenda según a normativa vixente de prevención de blanqueo de capitales. Facenda somos CASE todos');
             }
 
             currentState = 'processing';
@@ -695,12 +695,12 @@
         this.processDeposit = (amount) => {
             if (isNaN(amount) || amount <= 0) {
                 playSound('error');
-                this.showModal('Cantidad Inválida', 'Por favor, introduzca una cantidad válida.', () => { this.selectOperation('menu'); });
+                this.showModal('Cantidade Inválida', 'Por favor, introduza unha cantidade válida.', () => { this.selectOperation('menu'); });
                 amountInput = '';
                 return;
             }
              if (amount > 3000) {
-                this.showModal('Aviso Regulatorio', 'Esta operación por valor superior a 3.000 € será comunicada a Hacienda según la normativa vigente de prevención de blanqueo de capitales.');
+                this.showModal('Aviso Regulatorio', 'Esta operación por valor superior a 3.000 € será comunicada a Facenda según a normativa vixente de prevención de blanqueo de capitales. Facenda somos CASE todos');
             }
             currentState = 'processing';
             updateScreen();
@@ -708,7 +708,7 @@
             setTimeout(() => {
                 account.balance += amount;
                 account.transactions.unshift({ date: "26/08/2025", desc: "Ingreso en efectivo", amount: amount });
-                this.showModal('Ingreso Correcto', `Se han ingresado ${amount.toFixed(2).replace('.',',')} € en su cuenta. Su nuevo saldo es ${account.balance.toFixed(2).replace('.',',')} €.`);
+                this.showModal('Ingreso Correcto', `Ingresáronse ${amount.toFixed(2).replace('.',',')} € na súa conta. O seu novo saldo é ${account.balance.toFixed(2).replace('.',',')} €.`);
                 currentState = 'menu';
                 amountInput = '';
                 updateScreen();
@@ -718,28 +718,28 @@
         this.processTransfer = (destAccount, amount) => {
              if (destAccount.length !== 24 || isNaN(amount) || amount <= 0) {
                 playSound('error');
-                this.showModal('Datos Inválidos', 'Por favor, verifique el número de cuenta (debe tener 24 dígitos) y la cantidad.', () => { this.selectOperation('menu'); });
+                this.showModal('Datos Inválidos', 'Por favor, verifique o número de conta (debe ter 24 díxitos) e a cantidade.', () => { this.selectOperation('menu'); });
                 return;
             }
              if (amount > account.balance) {
                 playSound('error');
-                this.showModal('Saldo Insuficiente', 'No dispone de saldo suficiente para realizar esta operación.', () => { this.selectOperation('menu'); });
+                this.showModal('Saldo Insuficiente', 'Non dispón de saldo suficiente para realizar esta operación. Fan falta máis cartiños', () => { this.selectOperation('menu'); });
                 return;
             }
              if (amount > 6000) {
                 playSound('error');
-                this.showModal('Límite de Transferencia Superado', 'El límite por operación es de 6.000 €. Para cantidades mayores, utilice la banca online.', () => { this.selectOperation('menu'); });
+                this.showModal('Límite de Transferencia Superado', 'O límite por operación é de 6.000 €. Para cantidades maiores, utilice a banca online ou adíquese á política.', () => { this.selectOperation('menu'); });
                 return;
             }
              if (amount > 10000) {
-                this.showModal('Aviso Regulatorio', 'Esta transferencia por valor superior a 10.000 € será comunicada a Hacienda según la normativa vigente.');
+                this.showModal('Aviso Regulatorio', 'Esta transferencia por valor superior a 10.000 € será comunicada a Facienda según a normativa vixente. Facenda somos CASE todos');
             }
             currentState = 'processing';
             updateScreen();
             setTimeout(() => {
                 account.balance -= amount;
                 account.transactions.unshift({ date: "26/08/2025", desc: `Transferencia a ${destAccount.slice(0,4)}...${destAccount.slice(-4)}`, amount: -amount });
-                this.showModal('Transferencia Realizada', `Se han transferido ${amount.toFixed(2).replace('.',',')} € correctamente.`, () => { this.selectOperation('menu'); });
+                this.showModal('Transferencia Realizada', `Transferíronse ${amount.toFixed(2).replace('.',',')} € correctamente.`, () => { this.selectOperation('menu'); });
                 amountInput = '';
                 transferAccountInput = '';
                 updateScreen();
@@ -749,12 +749,12 @@
          this.processBillPay = (ref, amount) => {
              if (ref.length < 10 || isNaN(amount) || amount <= 0) {
                 playSound('error');
-                this.showModal('Datos Inválidos', 'Por favor, verifique la referencia y la cantidad.', () => { this.selectOperation('menu'); });
+                this.showModal('Datos Inválidos', 'Por favor, verifique a referencia e a cantidade.', () => { this.selectOperation('menu'); });
                 return;
             }
              if (amount > account.balance) {
                 playSound('error');
-                this.showModal('Saldo Insuficiente', 'No dispone de saldo suficiente para realizar el pago del recibo.', () => { this.selectOperation('menu'); });
+                this.showModal('Saldo Insuficiente', 'Non dispón de saldo suficiente para realizar o pagamento do recibo. Parece o Concello', () => { this.selectOperation('menu'); });
                 return;
             }
             currentState = 'processing';
@@ -762,7 +762,7 @@
             setTimeout(() => {
                 account.balance -= amount;
                 account.transactions.unshift({ date: "26/08/2025", desc: `Pago recibo ref: ${ref}`, amount: -amount });
-                this.showModal('Pago Realizado', `El pago por ${amount.toFixed(2).replace('.',',')} € del recibo con referencia ${ref} se ha realizado con éxito.`, () => { this.selectOperation('menu'); });
+                this.showModal('Pago Realizado', `O pago por ${amount.toFixed(2).replace('.',',')} € de recibo con referencia ${ref} foi realizado con éxito. Así da gusto`, () => { this.selectOperation('menu'); });
                 amountInput = '';
                 billRefInput = '';
                 updateScreen();
