@@ -164,7 +164,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 50;
+            z-index: 1000;
         }
         .modal-content {
             background-color: #fff;
@@ -331,7 +331,7 @@
                             <p style="font-size: 1.125rem;">Por favor, elixa unha opción para comezar.</p>
                         </div>
                         <div class="grid-cols-2" style="display: grid; gap: 1rem; margin-top: 2rem;">
-                            <button class="btn-main" onclick="atm.selectOperation('insertCard')">Insertar Tarxeta</button>
+                            <button class="btn-main" onclick="atm.selectOperation('insertCard')">Inserir Tarxeta</button>
                             <button class="btn-main" onclick="atm.selectOperation('cardless')">Operar sen Tarxeta</button>
                         </div>
                     `;
@@ -366,7 +366,7 @@
                     break;
                 case 'menu':
                     html = `
-                        <h2 style="font-size: 1.5rem; font-weight: bold; text-align: center; margin-bottom: 1rem;">Menú Principal</h2>
+                        <h2 style="font-size: 1.5rem; font-weight: bold; text-align: center; margin-bottom: 1rem;">Menú Principal BanCuntis</h2>
                         <div class="grid-cols-2" style="display: grid; gap: 0.75rem;">
                             <button class="btn-main" style="padding: 0.75rem;" onclick="atm.selectOperation('withdraw')">Retirar Efectivo</button>
                             <button class="btn-main" style="padding: 0.75rem;" onclick="atm.selectOperation('deposit')">Ingresar Efectivo</button>
@@ -440,7 +440,7 @@
                     html = `
                          <div class="text-center" style="margin: auto;">
                             <h2 style="font-size: 1.5rem; font-weight: bold; margin-bottom: 0.5rem;">Transferencia</h2>
-                            <label for="account-number" style="display: block; margin-bottom: 0.25rem;">Nº de conta de destino:</label>
+                            <label for="account-number" style="display: block; margin-bottom: 0.25rem;">Nº de conta de destino: (Teclee 24 díxitos)</label>
                             <div style="background-color: white; color: black; font-size: 1.5rem; border-radius: 0.5rem; padding: 0.5rem; width: 100%; margin: auto; height: 3rem; display: flex; align-items: center; justify-content: center; margin-bottom: 0.5rem;">
                                 ${transferAccountInput}
                             </div>
@@ -479,14 +479,15 @@
                         </div>
                         <button class="btn-secondary" onclick="atm.selectOperation('backToMenu')">Voltar</button>
                     `;
+                    const self = this;                    
                     setTimeout(() => {
                         document.getElementById('passbook-slot-light').classList.add('active');
                         const container = document.getElementById('passbook-animation-container');
                         if (container) {
-                            container.innerHTML = `<div style="position: absolute; width: 100%; height: 100%; background-color: #d1d5db; color: black; padding: 0.5rem; border-radius: 0.5rem; animation: passbook 2s ease-in-out forwards;">Imprimiendo movimientos...</div>`;
+                            container.innerHTML = `<div style="position: absolute; width: 100%; height: 100%; background-color: #d1d5db; color: black; padding: 0.5rem; border-radius: 0.5rem; animation: passbook 2s ease-in-out forwards;">Imprimindo movementos...</div>`;
                             setTimeout(() => {
                                 document.getElementById('passbook-slot-light').classList.remove('active');
-                                this.showModal('Libreta Actualizada', 'A súa libreta foi actualizada correctamente. Por favor, retírea.', () => { this.selectOperation('menu'); });
+                                self.showModal('Libreta Actualizada', 'A súa libreta foi actualizada correctamente. Por favor, retírea.', () => { self.selectOperation('menu'); });
                             }, 2000);
                         }
                     }, 500);
@@ -520,17 +521,22 @@
         }
         
         this.showModal = (title, message, callback) => {
-            document.getElementById('modal-title').innerText = title;
-            document.getElementById('modal-message').innerText = message;
-            const modalButton = document.getElementById('modal-button');
-            modalButton.onclick = () => {
-                this.closeModal();
-                if (callback) callback();
-                else this.selectOperation('menu');
-            };
-            document.getElementById('modal').classList.remove('hidden');
-            playSound('success');
-        };
+    document.getElementById('modal-title').innerText = title;
+    document.getElementById('modal-message').innerText = message;
+    const modalButton = document.getElementById('modal-button');
+    const self = this; // ✨ Almacenamos la referencia a 'this' aquí
+
+    modalButton.onclick = () => {
+        self.closeModal(); // ✅ Usamos 'self' para el contexto correcto
+        if (callback) {
+            callback();
+        } else {
+            self.selectOperation('menu');
+        }
+    };
+    document.getElementById('modal').classList.remove('hidden');
+    playSound('success');
+};
 
         this.closeModal = () => {
             document.getElementById('modal').classList.add('hidden');
@@ -630,16 +636,16 @@
             
             setTimeout(() => {
                 account.balance -= mockAmount;
-                account.transactions.unshift({ date: "26/08/2025", desc: "Retiro sin tarjeta", amount: -mockAmount });
+                account.transactions.unshift({ date: "26/08/2025", desc: "Retiro sen tarxeta", amount: -mockAmount });
                 document.getElementById('cash-slot-light').classList.add('active');
                 playSound('cash');
                 screen.innerHTML = `
                     <div class="text-center" style="margin: auto;">
-                        <h2 style="font-size: 1.875rem; font-weight: bold; margin-bottom: 1rem;">Retire su dinero</h2>
-                        <p>Por favor, recoja su efectivo de la ranura.</p>
+                        <h2 style="font-size: 1.875rem; font-weight: bold; margin-bottom: 1rem;">Retire os seus cartiños</h2>
+                        <p>Por favor, recolla o seu efectivo da ranura antes de que cheguen os cacos.</p>
                         <div style="margin-top: 2rem; font-size: 3rem; animation: dispense 1.5s ease-out forwards;">💶</div>
                     </div>
-                    <button class="btn-secondary" onclick="atm.selectOperation('exit')">Finalizar</button>
+                    <button class="btn-secondary" onclick="atm.selectOperation('exit')">Rematar</button>
                 `;
                  cardlessPhoneInput = '';
                  cardlessCodeInput = '';
@@ -682,11 +688,11 @@
                 
                 screen.innerHTML = `
                     <div class="text-center" style="margin: auto;">
-                        <h2 style="font-size: 1.875rem; font-weight: bold; margin-bottom: 1rem;">Retire su dinero</h2>
-                        <p>Por favor, recoja su efectivo de la ranura.</p>
+                        <h2 style="font-size: 1.875rem; font-weight: bold; margin-bottom: 1rem;">Retire os seus cartiños</h2>
+                        <p>Por favor, recolla o seu efectivo da ranura.</p>
                         <div style="margin-top: 2rem; font-size: 3rem; animation: dispense 1.5s ease-out forwards;">💶</div>
                     </div>
-                    <button class="btn-secondary" onclick="atm.selectOperation('exit')">Finalizar</button>
+                    <button class="btn-secondary" onclick="atm.selectOperation('exit')">Rematar</button>
                 `;
                 amountInput = '';
             }, 2000);
@@ -739,7 +745,7 @@
             setTimeout(() => {
                 account.balance -= amount;
                 account.transactions.unshift({ date: "26/08/2025", desc: `Transferencia a ${destAccount.slice(0,4)}...${destAccount.slice(-4)}`, amount: -amount });
-                this.showModal('Transferencia Realizada', `Transferíronse ${amount.toFixed(2).replace('.',',')} € correctamente.`, () => { this.selectOperation('menu'); });
+                this.showModal('Transferencia Realizada', `Transferíronse ${amount.toFixed(2).replace('.',',')} € correctamente. Veloz como Mieres no Rally`, () => { this.selectOperation('menu'); });
                 amountInput = '';
                 transferAccountInput = '';
                 updateScreen();
